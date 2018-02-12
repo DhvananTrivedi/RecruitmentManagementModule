@@ -9,11 +9,13 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+
 
 /**
  * @author dhvanan on 8/2/18 Thursday
@@ -22,23 +24,19 @@ import org.apache.log4j.Logger;
 public class CandidateDaoImpl implements CandidateDao {
 
     @Autowired
-    ClientConfig clientConfig;
+    RestHighLevelClient client;
 
     @Autowired
     Environment environment;
 
-    @Autowired
-    Logger logger;
+    private ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    ObjectMapper mapper;
-
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
     // Insert into database
     boolean register(String id, Candidate candidate){
 
 
         // init
-        RestHighLevelClient client = clientConfig.getClient();
         String cId = id;
         IndexRequest request = new IndexRequest(
                 environment.getProperty("request.index"),environment.getProperty("request.doc")
@@ -76,5 +74,9 @@ public class CandidateDaoImpl implements CandidateDao {
 
 
 
+    @PostConstruct
+    public void init() {
+        LOGGER.error("logger integrated successfully");
+    }
 
 }

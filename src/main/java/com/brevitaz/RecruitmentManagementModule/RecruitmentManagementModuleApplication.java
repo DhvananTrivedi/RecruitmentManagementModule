@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 public class RecruitmentManagementModuleApplication {
 
 	@Autowired
-	static Environment environment;
+	private Environment environment;
 
 
 
