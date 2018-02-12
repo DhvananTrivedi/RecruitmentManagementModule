@@ -10,6 +10,7 @@ import java.util.List;
  * @project RecruitmentManagementModule
  **/
 public class Candidate {
+
     private int applicantId;
     private String name;
     private String phoneNo;
