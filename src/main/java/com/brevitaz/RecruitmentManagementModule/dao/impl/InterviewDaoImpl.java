@@ -1,8 +1,10 @@
 package com.brevitaz.RecruitmentManagementModule.dao.impl;
 
-import com.brevitaz.RecruitmentManagementModule.config.ClientConfig;
 import com.brevitaz.RecruitmentManagementModule.dao.CandidateDao;
+import com.brevitaz.RecruitmentManagementModule.dao.InterviewDao;
 import com.brevitaz.RecruitmentManagementModule.model.Candidate;
+import com.brevitaz.RecruitmentManagementModule.model.Interview;
+import com.brevitaz.RecruitmentManagementModule.model.Interviewer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -13,7 +15,6 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.search.SearchHit;
@@ -27,14 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * @author dhvanan on 8/2/18 Thursday
- * @project RecruitmentManagementModule
- **/
-
 @Repository
-public class CandidateDaoImpl implements CandidateDao {
+public class InterviewDaoImpl implements InterviewDao{
+
 
     @Autowired
     RestHighLevelClient client;
@@ -43,18 +39,15 @@ public class CandidateDaoImpl implements CandidateDao {
     private ObjectMapper mapper = new ObjectMapper();
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
-    // Insert into database
 
     @Override
     public boolean insert(Candidate candidate){
 
 
-        // init
         IndexRequest request = new IndexRequest(
-                environment.getProperty("request.candidateIndex"),environment.getProperty("request.doc")
+                environment.getProperty("request.interviewIndex"),environment.getProperty("request.doc"),String.valueOf(candidate.getApplicantId())
         );
 
-        // execution
         try {
 
             String json = mapper.writeValueAsString(candidate);
@@ -70,11 +63,12 @@ public class CandidateDaoImpl implements CandidateDao {
             return false;
         }
     }
+
     @Override
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.candidateIndex"), environment.getProperty("request.doc"), id);
+                environment.getProperty("request.interviewIndex"), environment.getProperty("request.doc"), id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -87,44 +81,44 @@ public class CandidateDaoImpl implements CandidateDao {
     }
 
     @Override
-    public Candidate getById(String id)
+    public Interview getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.candidateIndex"),environment.getProperty("request.doc"),id
+                environment.getProperty("request.interviewIndex"),environment.getProperty("request.doc"),id
         );
 
         try {
             GetResponse getResponse=client.get(request);
-            Candidate candidate = mapper.readValue(getResponse.getSourceAsString(), Candidate.class);
-            return candidate;
+            Interview interview = mapper.readValue(getResponse.getSourceAsString(), Interview.class);
+            return interview;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+
     @Override
-    public List<Candidate> getAll()
+    public List<Interview> getAll()
     {
 
-        List<Candidate> candidates = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.candidateIndex"));
+        List<Interview> interviews = new ArrayList<>();
+        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.interviewIndex"));
         searchRequest.types(environment.getProperty("request.doc"));
 
         try {
             SearchResponse searchResponse = client.search(searchRequest);
             SearchHit[] hits = searchResponse.getHits().getHits();
 
-            Candidate candidate;
-
+            Interview interview;
             for (SearchHit hit : hits) {
-                candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
-                candidates.add(candidate);
+                interview = mapper.readValue(hit.getSourceAsString(), Interview.class);
+                interviews.add(interview);
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        return candidates;
+        return interviews;
 
     }
 
@@ -133,5 +127,9 @@ public class CandidateDaoImpl implements CandidateDao {
     public void init() {
         LOGGER.error("logger integrated successfully");
     }
+
+
+
+
 
 }
