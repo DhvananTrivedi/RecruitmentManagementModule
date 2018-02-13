@@ -16,4 +16,7 @@ public interface CandidateDao {
     public List<Candidate> getAll();
 
 
+    List<Candidate> getByName(String name);
+    boolean update(String id , Candidate candidate);
+
 }

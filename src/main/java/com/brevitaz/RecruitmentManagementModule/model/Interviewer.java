@@ -5,8 +5,8 @@ package com.brevitaz.RecruitmentManagementModule.model;
  * @project RecruitmentManagementModule
  **/
 public class Interviewer {
-    String id;
-    String name;
+    private String id;
+    private String name;
 
     public String getId() {
         return id;

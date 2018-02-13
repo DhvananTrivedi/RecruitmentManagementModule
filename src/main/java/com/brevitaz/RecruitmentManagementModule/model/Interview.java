@@ -9,6 +9,39 @@ import java.util.Date;
 public class Interview {
     String id;
     Date date;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
+    }
+
+    public Interviewer getInterviewer() {
+        return interviewer;
+    }
+
+    public void setInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+    }
+
     Candidate candidate;
     Interviewer interviewer;
 
