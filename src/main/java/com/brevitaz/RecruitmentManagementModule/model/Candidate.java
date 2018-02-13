@@ -2,7 +2,6 @@ package com.brevitaz.RecruitmentManagementModule.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -11,13 +10,14 @@ import java.util.List;
  **/
 public class Candidate {
 
-    private int applicantId;
+    private String candidateId;
     private String name;
     private String phoneNo;
     private List<String> skills;
     private String dataFromResume;
     private String status;
     private MultipartFile resume;
+    private Interview interview;
 
 
 
@@ -53,12 +53,12 @@ public class Candidate {
         this.dataFromResume = dataFromResume;
     }
 
-    public int getApplicantId() {
-        return applicantId;
+    public String getCandidateId() {
+        return candidateId;
     }
 
-    public void setApplicantId(int applicantId) {
-        this.applicantId = applicantId;
+    public void setCandidateId(String candidateId) {
+        this.candidateId = candidateId;
     }
 
     public String getStatus() {
