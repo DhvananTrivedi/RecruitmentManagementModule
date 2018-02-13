@@ -19,43 +19,39 @@ import java.util.List;
 public class CandidateController {
 
     @RequestMapping(method = RequestMethod.POST)
-    public boolean registerCandidate(@RequestBody Candidate candidate){
+    public boolean register(@RequestBody Candidate candidate){
         System.out.println("Candidate is registered successfully.");
         return true;
     }
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public List getAll() throws IOException{
+    public List<Candidate> getAll() throws IOException{
         System.out.println("All received resumes will be shown.");
         return null;
     }
 
-    @RequestMapping(value = "/{keyword}",method = RequestMethod.GET)
-    public List findCandidateByKeyword(@PathVariable String keyword){
-        System.out.println("Resumes will be selected according to the keyword -"+keyword);
+    @RequestMapping(value = "/id/{id}",method = RequestMethod.GET)
+    public Candidate findCandidateById(@PathVariable String id){
+        System.out.println("Resumes will be selected according to the keyword -"+id);
         return null;
     }
 
+    @RequestMapping(value = "/name/{name}",method = RequestMethod.GET)
+    public List<Candidate> findCandidateByName(@PathVariable String name){
+        System.out.println("Resumes will be selected according to the keyword -"+name);
+        return null;
+    }
 
-    @RequestMapping(value = "/schedule-interview", method = RequestMethod.POST)
-    public boolean addSchedule(@RequestBody Candidate candidate, Date date){
-        System.out.println("Interview is scheduled. ");
+    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+    public boolean update(@PathVariable String id,@RequestBody Candidate candidate){
+        System.out.println("Candidate  at id "+id+" will be updated");
         return true;
     }
 
-    @RequestMapping(value = "/get-schedule" , method = {RequestMethod.GET})
-    public List getSchedule()
-    {
-        System.out.println("Schedule list of all candidates");
-        return null;
-        // TODO - Today's schedule
-    }
-
-    @RequestMapping(value = "/schedule-interview/{scheduleId}" , method = {RequestMethod.PUT})
-    public boolean updateScheduleOfCandidate(@RequestBody Candidate candidate, @PathVariable String scheduleId)
-    {
-        System.out.println("schedule is updated successfully!");
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+    public boolean delete(@PathVariable String id ){
+        System.out.println("Candidate will be deleted at id "+id);
         return true;
     }
 
