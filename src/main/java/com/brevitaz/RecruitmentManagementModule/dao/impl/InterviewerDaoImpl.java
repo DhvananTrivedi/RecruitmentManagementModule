@@ -48,6 +48,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
 
     @Autowired
     RestHighLevelClient client;
+    @Autowired
     Environment environment;
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -80,7 +81,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.interviewerIndex"), environment.getProperty("request.doc"), id);
+                environment.getProperty("request.interviewerIndex"), environment.getProperty("request.type"), id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -96,7 +97,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public Interviewer getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.interviewerIndex"),environment.getProperty("request.doc"),id
+                environment.getProperty("request.interviewerIndex"),environment.getProperty("request.type"),id
         );
 
         try {
@@ -115,7 +116,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
 
         List<Interviewer> interviewers = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.interviewerIndex"));
-        searchRequest.types(environment.getProperty("request.doc"));
+        searchRequest.types(environment.getProperty("request.type"));
 
         try {
             SearchResponse searchResponse = client.search(searchRequest);
@@ -147,10 +148,9 @@ public class InterviewerDaoImpl implements InterviewerDao {
     //get List<Interview> by candidate's name
     public List<Interviewer> getByName(String name) {
         ///init
-        List<Interviewer> interviewers = new ArrayList<>();
+      /*  List<Interviewer> interviewers = new ArrayList<>();
         SearchRequest request = new SearchRequest(
-                environment.getProperty("request.interviewerIndex"), environment.getProperty("request.type")
-        );
+                environment.getProperty("request.interviewerIndex"), environment.getProperty("request.type"));
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("name", name)
                 .fuzziness(Fuzziness.AUTO)
@@ -172,7 +172,42 @@ public class InterviewerDaoImpl implements InterviewerDao {
             System.out.println(ioE);
         }
 
+        return interviewers;*/
+      //////////////////////////////////////////////////////////////////////////////////
+        List<Interviewer> interviewers = new ArrayList<>();
+        SearchRequest request = new SearchRequest(
+                environment.getProperty("request.interviewerIndex"));
+
+
+        try {
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+            QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("name", name)
+                    .fuzziness(Fuzziness.AUTO)
+                    .prefixLength(3)
+                    .maxExpansions(10);
+            sourceBuilder.query(matchQueryBuilder);
+            //sourceBuilder.query(QueryBuilders.boolQuery().must(matchQuery("name",name)));
+            request.source(sourceBuilder);
+            SearchResponse response = client.search(request);
+            SearchHits hits = response.getHits();
+            for (SearchHit hit : hits) {
+                Interviewer interviewer = mapper.readValue(hit.getSourceAsString(), Interviewer.class);
+                System.out.println(interviewer);
+                interviewers.add(interviewer);
+            }
+        }
+        catch(IOException ioE){
+            System.out.println(ioE);
+        }
         return interviewers;
+
+
+
+
+
+
+
+
     }
 
     @Override
