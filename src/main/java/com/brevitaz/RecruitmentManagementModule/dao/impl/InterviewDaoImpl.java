@@ -45,6 +45,8 @@ public class InterviewDaoImpl implements InterviewDao {
 
     @Autowired
     RestHighLevelClient client;
+
+    @Autowired
     Environment environment;
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -77,7 +79,7 @@ public class InterviewDaoImpl implements InterviewDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.interviewIndex"), environment.getProperty("request.doc"), id);
+                environment.getProperty("request.interviewIndex"), environment.getProperty("request.type"), id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -93,7 +95,7 @@ public class InterviewDaoImpl implements InterviewDao {
     public Interview getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.interviewIndex"),environment.getProperty("request.doc"),id
+                environment.getProperty("request.interviewIndex"),environment.getProperty("request.type"),id
         );
 
         try {
@@ -113,7 +115,7 @@ public class InterviewDaoImpl implements InterviewDao {
 
         List<Interview> interviews = new ArrayList<>();
         SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.interviewIndex"));
-        searchRequest.types(environment.getProperty("request.doc"));
+        searchRequest.types(environment.getProperty("request.type"));
 
         try {
             SearchResponse searchResponse = client.search(searchRequest);
@@ -137,8 +139,8 @@ public class InterviewDaoImpl implements InterviewDao {
         ///init
         List<Interview> interviews = new ArrayList<>();
         SearchRequest request = new SearchRequest(
-                environment.getProperty("request.interviewIndex"),environment.getProperty("request.type")
-        );
+                environment.getProperty("request.interviewIndex"));
+        ///request.types(environment.getProperty("request.type"));
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("candidate.name", name)
                 .fuzziness(Fuzziness.AUTO)
@@ -187,9 +189,5 @@ public class InterviewDaoImpl implements InterviewDao {
     public void init() {
         LOGGER.error("logger integrated successfully");
     }
-
-
-
-
 
 }

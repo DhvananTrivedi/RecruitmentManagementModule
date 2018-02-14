@@ -7,16 +7,11 @@ import java.util.Date;
  * @project RecruitmentManagementModule
  **/
 public class Interview {
-    String id;
     Date date;
+    Candidate candidate;
+    Interviewer interviewer;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    
 
     public Date getDate() {
         return date;
@@ -42,8 +37,6 @@ public class Interview {
         this.interviewer = interviewer;
     }
 
-    Candidate candidate;
-    Interviewer interviewer;
 
 
 }

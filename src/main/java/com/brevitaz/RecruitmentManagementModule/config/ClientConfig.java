@@ -43,7 +43,7 @@ public class ClientConfig {
         if(client==null){
             client = new RestHighLevelClient(
                     RestClient.builder(
-                            new HttpHost(hostname, port, scheme)));
+                            new HttpHost(hostname, port, scheme)).build());
             return client;
         }
         else {
