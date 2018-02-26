@@ -1,21 +1,15 @@
 package com.brevitaz.RecruitmentManagementModule.controller;
 
 import com.brevitaz.RecruitmentManagementModule.dao.InterviewerDao;
-import com.brevitaz.RecruitmentManagementModule.model.Candidate;
 import com.brevitaz.RecruitmentManagementModule.model.Interviewer;
-import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/interviewer")
+@RequestMapping("/interviewers")
 public class InterviewerController {
 
     @Autowired
@@ -37,7 +31,7 @@ public class InterviewerController {
     }
 
 
-    @RequestMapping(value = "id/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public Interviewer getById(@PathVariable String id){
         Interviewer interviewer = interviewerDao.getById(id);
         System.out.println("Interviewer with id : "+id+" is shown.");
@@ -45,7 +39,7 @@ public class InterviewerController {
     }
 
 
-    @RequestMapping(value = "name/{name}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{name}",method = RequestMethod.GET)
     public List<Interviewer> getByName(@PathVariable String name){
         List<Interviewer> interviewers = interviewerDao.getByName(name);
         System.out.println("Interviewer : "+ name +" is shown.");
@@ -67,18 +61,21 @@ public class InterviewerController {
         return status;
     }
 
-
-//    QueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("name", name)
-//               .fuzziness(Fuzziness.AUTO)
-//               .prefixLength(3)
-//               .maxExpansions(10);
-
-
-    @RequestMapping(value = "/hello",method = RequestMethod.GET)
-    public boolean hello(){
-        System.out.println("HELOLOLO");
-        return true;
+    //TODO: doubt for status
+    @RequestMapping(value = "/status/{id}" , method = {RequestMethod.GET})
+    public String getCandidateStatus(@PathVariable String candidateId)
+    {
+        System.out.println("Candidate Status of "+candidateId+" will be fetched.");
+        return null;
     }
 
+
+    @RequestMapping(value = "candidate/{id}" , method = {RequestMethod.GET})
+    public List<Interviewer> getByCandidateId(@PathVariable String candidateId)
+    {
+        List<Interviewer> interviewers = interviewerDao.getByCandidateId(candidateId);
+        System.out.println("List of interviewers for candidate with id - "+candidateId);
+        return  interviewers;
+    }
 
 }

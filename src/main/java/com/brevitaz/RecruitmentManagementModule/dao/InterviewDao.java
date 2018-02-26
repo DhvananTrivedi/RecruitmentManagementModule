@@ -10,11 +10,11 @@ public interface InterviewDao {
     public boolean delete(String id);
     public Interview getById(String id);
     public List<Interview> getAll();
-/**
- * @author dhvanan on 12/2/18 Monday
- * @project RecruitmentManagementModule
- **/
-    boolean insert(Interview interview);
-    List<Interview> getByName(String name);
-    boolean update(String id , Interview interview);
+    public boolean insert(Interview interview);
+    public boolean update(String id , Interview interview);
+
+    /*
+    //TODO:This method is not required
+    public List<Interview> getByName(String name);
+    */
 }

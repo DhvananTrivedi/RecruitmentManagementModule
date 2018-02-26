@@ -1,9 +1,13 @@
 package com.brevitaz.RecruitmentManagementModule.model;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author dhvanan on 7/2/18 Wednesday
  * @project RecruitmentManagementModule
  **/
+
+@Component
 public class Interviewer {
     private String id;
     private String name;
@@ -23,4 +27,6 @@ public class Interviewer {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

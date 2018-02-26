@@ -1,11 +1,11 @@
 package com.brevitaz.RecruitmentManagementModule.controller;
 
+import com.brevitaz.RecruitmentManagementModule.dao.CandidateDao;
 import com.brevitaz.RecruitmentManagementModule.model.Candidate;
-import com.brevitaz.RecruitmentManagementModule.model.Openings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,53 +15,63 @@ import java.util.List;
  **/
 
 @RestController
-@RequestMapping("/candidate")
+@RequestMapping("/candidates")
 public class CandidateController {
+
+
+    @Autowired
+    CandidateDao candidateDao;
 
     @RequestMapping(method = RequestMethod.POST)
     public boolean register(@RequestBody Candidate candidate){
+        boolean status = candidateDao.insert(candidate);
         System.out.println("Candidate is registered successfully.");
-        return true;
+        return status;
     }
 
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Candidate> getAll() throws IOException{
-        System.out.println("All received resumes will be shown.");
-        return null;
+        List<Candidate> candidates = candidateDao.getAll();
+        System.out.println("All received resumes will be shown."+candidates);
+        return candidates;
     }
 
-    @RequestMapping(value = "/id/{id}",method = RequestMethod.GET)
-    public Candidate findCandidateById(@PathVariable String id){
-        System.out.println("Resumes will be selected according to the keyword -"+id);
-        return null;
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public Candidate getById(@PathVariable String id){
+        Candidate candidate = candidateDao.getById(id);
+        System.out.println("Resumes will be selected according to candidate id -"+id);
+        return candidate;
     }
 
-    @RequestMapping(value = "/name/{name}",method = RequestMethod.GET)
-    public List<Candidate> findCandidateByName(@PathVariable String name){
-        System.out.println("Resumes will be selected according to the keyword -"+name);
-        return null;
+    @RequestMapping(value = "/{name}",method = RequestMethod.GET)
+    public List<Candidate> getByName(@PathVariable String name){
+        List<Candidate> candidates =  candidateDao.getByName(name);
+        System.out.println("Resumes will be selected according to the name of candidate -"+name);
+        return candidates;
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
     public boolean update(@PathVariable String id,@RequestBody Candidate candidate){
+        boolean status = candidateDao.update(id, candidate);
         System.out.println("Candidate  at id "+id+" will be updated");
-        return true;
+        return status;
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public boolean delete(@PathVariable String id ){
+        boolean status = candidateDao.delete(id);
         System.out.println("Candidate will be deleted at id "+id);
-        return true;
+        return status;
     }
 
-
-    @RequestMapping(value = "/status/{candidateId}" , method = {RequestMethod.GET})
-    public String getCandidateStatus(@PathVariable String candidateId ,Candidate candidate)
-    {
-        System.out.println("Candidate Status of "+candidateId+" will be fetched.");
-        return null;
+    @RequestMapping(value = "/{keyword}",method = RequestMethod.GET)
+    public List<Candidate> getByKeyword(@PathVariable String keyword ){
+        List<Candidate> candidates = candidateDao.getByKeyword(keyword);
+        System.out.println("Candidates will be shown at id "+keyword);
+        return candidates;
     }
+
 
 }
 

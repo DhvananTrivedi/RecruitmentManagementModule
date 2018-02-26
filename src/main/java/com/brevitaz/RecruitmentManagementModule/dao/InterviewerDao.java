@@ -9,12 +9,15 @@ import java.util.List;
  * @project RecruitmentManagementModule
  **/
 public interface InterviewerDao {
-    boolean insert(Interviewer interviewer);
-    List<Interviewer> getByName(String name);
-    boolean update(String id , Interviewer interviewer);
+
+    public boolean insert(Interviewer interviewer);
+    public List<Interviewer> getByName(String name);
+    public boolean update(String id , Interviewer interviewer);
     public boolean delete(String id);
     public Interviewer getById(String id);
     public List<Interviewer> getAll();
+    public List<Interviewer> getByCandidateId(String candidateId);
+
 
 
 }
