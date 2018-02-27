@@ -1,7 +1,6 @@
 package dao;
 
 import com.brevitaz.RecruitmentManagementModule.RecruitmentManagementModuleApplication;
-import com.brevitaz.RecruitmentManagementModule.TestA;
 import com.brevitaz.RecruitmentManagementModule.dao.CandidateDao;
 import com.brevitaz.RecruitmentManagementModule.dao.impl.CandidateDaoImpl;
 import com.brevitaz.RecruitmentManagementModule.model.Candidate;
