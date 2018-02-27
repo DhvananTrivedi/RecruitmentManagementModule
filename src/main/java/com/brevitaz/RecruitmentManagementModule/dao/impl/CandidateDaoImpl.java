@@ -41,13 +41,13 @@ import java.util.List;
 public class CandidateDaoImpl implements CandidateDao {
 
     @Autowired
-    private RestHighLevelClient client;
+     RestHighLevelClient client;
 
     @Autowired
-    private Environment environment;
+     Environment environment;
 
     @Autowired
-    private ObjectMapper mapper;
+     ObjectMapper mapper;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
 
