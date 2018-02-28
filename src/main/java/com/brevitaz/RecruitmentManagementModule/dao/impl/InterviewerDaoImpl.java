@@ -28,7 +28,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public boolean insert(Interviewer interviewer) {
         // init
         IndexRequest request = new IndexRequest(
-                environment.getProperty("request.interviewerIndex"),TYPE, interviewer.getId());
+                environment.getProperty("elasticsearch.index.interviewer"),TYPE, interviewer.getId());
 
         //exec
         try {
@@ -74,7 +73,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.interviewerIndex"), TYPE, id);
+                environment.getProperty("elasticsearch.index.interviewer"), TYPE, id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -90,7 +89,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public Interviewer getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.interviewerIndex"),TYPE,id);
+                environment.getProperty("elasticsearch.index.interviewer"),TYPE,id);
 
         try {
             GetResponse getResponse=client.get(request);
@@ -106,7 +105,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     public List<Interviewer> getAll()
     {
         List<Interviewer> interviewers = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.interviewerIndex"));
+        SearchRequest searchRequest = new SearchRequest( environment.getProperty("elasticsearch.index.interviewer"));
         searchRequest.types(TYPE);
 
         try {
@@ -137,7 +136,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
 
         List<Interviewer> interviewers = new ArrayList<>();
         SearchRequest request = new SearchRequest(
-                environment.getProperty("request.interviewerIndex"));
+                environment.getProperty("elasticsearch.index.interviewer"));
 
 
         try {
@@ -168,7 +167,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     @Override
     public boolean update(String id,Interviewer interviewer){
         UpdateRequest request = new UpdateRequest(
-                environment.getProperty("request.interviewerIndex"),TYPE,id);
+                environment.getProperty("elasticsearch.index.interviewer"),TYPE,id);
 
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
@@ -188,7 +187,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
     {
         List<Interviewer> interviewers = new ArrayList<>();
         SearchRequest request = new SearchRequest(
-                environment.getProperty("request.interviewerIndex"));
+                environment.getProperty("elasticsearch.index.interviewer"));
 
         try {
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
