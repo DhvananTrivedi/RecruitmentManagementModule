@@ -65,13 +65,13 @@ public class CandidateController {
         return status;
     }
 
-    @RequestMapping(value = "/{keyword}",method = RequestMethod.GET)
+   /* @RequestMapping(value = "/{keyword}",method = RequestMethod.GET)
     public List<Candidate> getByKeyword(@PathVariable String keyword ){
         List<Candidate> candidates = candidateDao.getByKeyword(keyword);
         System.out.println("Candidates will be shown at id "+keyword);
         return candidates;
     }
-
+*/
 
 }
 

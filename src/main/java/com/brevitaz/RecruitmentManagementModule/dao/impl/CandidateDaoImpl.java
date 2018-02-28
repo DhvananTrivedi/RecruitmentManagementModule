@@ -59,7 +59,7 @@ public class CandidateDaoImpl implements CandidateDao {
         System.out.println("=========");
 
         IndexRequest request = new IndexRequest(
-                environment.getProperty("elasticsearch.index.candidates"),TYPE,candidate.getId());
+                environment.getProperty("request.candidateIndex"),TYPE,candidate.getId());
 
         LOGGER.info("Hello LOGGER");
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -84,7 +84,7 @@ public class CandidateDaoImpl implements CandidateDao {
         ///init
        List<Candidate> candidates = new ArrayList<>();
        SearchRequest request = new SearchRequest(
-               environment.getProperty("elasticsearch.index.candidates"));
+               environment.getProperty("request.candidateIndex"));
      //exec
        try {
            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -109,38 +109,11 @@ public class CandidateDaoImpl implements CandidateDao {
        return candidates;
    }
 
-    public List<Candidate> getByKeyword(String name) {
-
-        List<Candidate> candidates = new ArrayList<>();
-        SearchRequest request = new SearchRequest(
-                environment.getProperty("elasticsearch.index.candidates"));
-
-
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.termQuery("name",name));
- /*sourceBuilder.from(0);
- sourceBuilder.size(10);*/
-        request.source(sourceBuilder);
-        try {
-            SearchResponse searchResponse = client.search(request);
-            SearchHit[] hits = searchResponse.getHits().getHits();
-            for (SearchHit hit : hits) {
-                Candidate candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
-                LOGGER.info("CANDIDATE : "+candidate);
-                candidates.add(candidate);
-            }
-        }
-        catch (Exception e ){
-            e.printStackTrace();
-        }
-        return candidates;
-    }
-
 
     @Override
     public boolean update( String id,Candidate candidate){
         UpdateRequest request = new UpdateRequest(
-                environment.getProperty("elasticsearch.index.candidates"),TYPE,id
+                environment.getProperty("request.candidateIndex"),TYPE,id
         );
 
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -158,7 +131,7 @@ public class CandidateDaoImpl implements CandidateDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("elasticsearch.index.candidates"),TYPE, id);
+                environment.getProperty("request.candidateIndex"),TYPE, id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -174,7 +147,7 @@ public class CandidateDaoImpl implements CandidateDao {
     public Candidate getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("elasticsearch.index.candidates"),TYPE,id);
+                environment.getProperty("request.candidateIndex"),TYPE,id);
 
         try {
             GetResponse getResponse=client.get(request);
@@ -191,7 +164,7 @@ public class CandidateDaoImpl implements CandidateDao {
     {
 
         List<Candidate> candidates = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest( environment.getProperty("elasticsearch.index.candidates"));
+        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.candidateIndex"));
         searchRequest.types(TYPE);
 
         try {
@@ -210,6 +183,39 @@ public class CandidateDaoImpl implements CandidateDao {
         return candidates;
 
     }
+
+
+    /*
+
+    public List<Candidate> getByKeyword(String name) {
+
+        List<Candidate> candidates = new ArrayList<>();
+        SearchRequest request = new SearchRequest(
+                environment.getProperty("request.candidateIndex"));
+
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.termQuery("name",name));
+ */
+/*sourceBuilder.from(0);
+ sourceBuilder.size(10);*//*
+
+        request.source(sourceBuilder);
+        try {
+            SearchResponse searchResponse = client.search(request);
+            SearchHit[] hits = searchResponse.getHits().getHits();
+            for (SearchHit hit : hits) {
+                Candidate candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
+                LOGGER.info("CANDIDATE : "+candidate);
+                candidates.add(candidate);
+            }
+        }
+        catch (Exception e ){
+            e.printStackTrace();
+        }
+        return candidates;
+    }
+*/
 
 
     @PostConstruct
