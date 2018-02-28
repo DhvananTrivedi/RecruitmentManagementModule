@@ -53,7 +53,7 @@ public class InterviewDaoImpl implements InterviewDao {
 
 
         IndexRequest request = new IndexRequest(
-                environment.getProperty("request.interviewIndex"),TYPE,interview.getCandidate().getId());
+                environment.getProperty("elasticsearch.index.interviews"),TYPE,interview.getCandidate().getId());
 
         try {
 
@@ -72,7 +72,7 @@ public class InterviewDaoImpl implements InterviewDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.interviewIndex"),TYPE, id);
+                environment.getProperty("elasticsearch.index.interviews"),TYPE, id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -88,7 +88,7 @@ public class InterviewDaoImpl implements InterviewDao {
     public Interview getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.interviewIndex"),TYPE,id);
+                environment.getProperty("elasticsearch.index.interviews"),TYPE,id);
 
         try {
             GetResponse getResponse=client.get(request);
@@ -106,7 +106,7 @@ public class InterviewDaoImpl implements InterviewDao {
     {
 
         List<Interview> interviews = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.interviewIndex"));
+        SearchRequest searchRequest = new SearchRequest( environment.getProperty("elasticsearch.index.interviews"));
         searchRequest.types(TYPE);
 
         try {
@@ -129,7 +129,7 @@ public class InterviewDaoImpl implements InterviewDao {
     //update interview details
     public boolean update(String id,Interview interview){
         UpdateRequest request = new UpdateRequest(
-                environment.getProperty("request.interviewIndex"),TYPE,id);
+                environment.getProperty("elasticsearch.index.interviews"),TYPE,id);
 
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
