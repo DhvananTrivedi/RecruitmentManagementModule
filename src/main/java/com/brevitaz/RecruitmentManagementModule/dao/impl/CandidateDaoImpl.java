@@ -59,7 +59,7 @@ public class CandidateDaoImpl implements CandidateDao {
         System.out.println("=========");
 
         IndexRequest request = new IndexRequest(
-                environment.getProperty("request.candidateIndex"),TYPE,candidate.getId());
+                environment.getProperty("elasticsearch.index.candidate"),TYPE,candidate.getId());
 
         LOGGER.info("Hello LOGGER");
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -84,7 +84,7 @@ public class CandidateDaoImpl implements CandidateDao {
         ///init
        List<Candidate> candidates = new ArrayList<>();
        SearchRequest request = new SearchRequest(
-               environment.getProperty("request.candidateIndex"));
+               environment.getProperty("elasticsearch.index.candidate"));
      //exec
        try {
            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -113,7 +113,7 @@ public class CandidateDaoImpl implements CandidateDao {
     @Override
     public boolean update( String id,Candidate candidate){
         UpdateRequest request = new UpdateRequest(
-                environment.getProperty("request.candidateIndex"),TYPE,id
+                environment.getProperty("elasticsearch.index.candidate"),TYPE,id
         );
 
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -131,7 +131,7 @@ public class CandidateDaoImpl implements CandidateDao {
     public boolean delete(String id) {
 
         DeleteRequest deleteRequest = new DeleteRequest(
-                environment.getProperty("request.candidateIndex"),TYPE, id);
+                environment.getProperty("elasticsearch.index.candidate"),TYPE, id);
 
         try {
             DeleteResponse response = client.delete(deleteRequest);
@@ -147,7 +147,7 @@ public class CandidateDaoImpl implements CandidateDao {
     public Candidate getById(String id)
     {
         GetRequest request = new GetRequest(
-                environment.getProperty("request.candidateIndex"),TYPE,id);
+                environment.getProperty("elasticsearch.index.candidate"),TYPE,id);
 
         try {
             GetResponse getResponse=client.get(request);
@@ -164,7 +164,7 @@ public class CandidateDaoImpl implements CandidateDao {
     {
 
         List<Candidate> candidates = new ArrayList<>();
-        SearchRequest searchRequest = new SearchRequest( environment.getProperty("request.candidateIndex"));
+        SearchRequest searchRequest = new SearchRequest( environment.getProperty("elasticsearch.index.candidate"));
         searchRequest.types(TYPE);
 
         try {
