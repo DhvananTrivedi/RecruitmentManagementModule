@@ -53,7 +53,7 @@ public class InterviewDaoImpl implements InterviewDao {
 
 
         IndexRequest request = new IndexRequest(
-                environment.getProperty("elasticsearch.index.interviews"),TYPE,interview.getCandidate().getId());
+                environment.getProperty("elasticsearch.index.interviews"),TYPE,interview.getId());
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
 
