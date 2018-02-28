@@ -54,7 +54,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
         // init
         IndexRequest request = new IndexRequest(
                 environment.getProperty("elasticsearch.index.interviewer"),TYPE, interviewer.getId());
-
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //exec
         try {
 

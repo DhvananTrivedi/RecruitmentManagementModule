@@ -63,6 +63,7 @@ public class CandidateDaoImplTest {
 
     @Test
     public void testGetAll() {
+
         List<Candidate> candidates = candidateDao.getAll();
         Assert.assertNotNull(candidates);
     }
@@ -73,10 +74,10 @@ public class CandidateDaoImplTest {
         Assert.assertNotNull(candidate);
     }
 
-    @Test
+   /* @Test
     public void testGetByKeyword() {
 
-    }
+    }*/
 
     @Test
     public void testGetByName() {

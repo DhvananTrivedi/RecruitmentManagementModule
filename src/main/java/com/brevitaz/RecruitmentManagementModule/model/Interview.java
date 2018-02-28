@@ -17,8 +17,8 @@ public class Interview {
     private Candidate candidate;
     private Interviewer interviewer;
 
-   /* private enum type { Aptitude , Practical , InterviewRound , HR};
-    private enum status {pass , fail}*/
+   private enum type { Aptitude , Practical , TechnicalInterview , HR};
+    private enum status {pass , fail};
 
     public String getId() {
         return id;
@@ -51,5 +51,19 @@ public class Interview {
     public void setInterviewer(Interviewer interviewer) {
         this.interviewer = interviewer;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Interview interview = (Interview) o;
+
+        if (id != null ? !id.equals(interview.id) : interview.id != null) return false;
+        if (date != null ? !date.equals(interview.date) : interview.date != null) return false;
+        if (candidate != null ? !candidate.equals(interview.candidate) : interview.candidate != null) return false;
+        return interviewer != null ? interviewer.equals(interview.interviewer) : interview.interviewer == null;
+    }
+
 
 }

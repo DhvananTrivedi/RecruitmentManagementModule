@@ -69,4 +69,35 @@ public class Candidate {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Candidate(String id, String name, String status) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+    }
+
+    public  Candidate(){
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Candidate candidate = (Candidate) o;
+
+        if (id != null ? !id.equals(candidate.id) : candidate.id != null) return false;
+        if (name != null ? !name.equals(candidate.name) : candidate.name != null) return false;
+        if (phoneNo != null ? !phoneNo.equals(candidate.phoneNo) : candidate.phoneNo != null) return false;
+        if (skills != null ? !skills.equals(candidate.skills) : candidate.skills != null) return false;
+        if (dataFromResume != null ? !dataFromResume.equals(candidate.dataFromResume) : candidate.dataFromResume != null)
+            return false;
+        if (status != null ? !status.equals(candidate.status) : candidate.status != null) return false;
+        if (resume != null ? !resume.equals(candidate.resume) : candidate.resume != null) return false;
+        return interview != null ? interview.equals(candidate.interview) : candidate.interview == null;
+    }
+
+
 }
+

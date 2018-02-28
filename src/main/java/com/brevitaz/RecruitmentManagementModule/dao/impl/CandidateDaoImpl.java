@@ -62,7 +62,7 @@ public class CandidateDaoImpl implements CandidateDao {
                 environment.getProperty("elasticsearch.index.candidates"),TYPE,candidate.getId());
 
         LOGGER.info("Hello LOGGER");
-
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // execution
         try {
 
