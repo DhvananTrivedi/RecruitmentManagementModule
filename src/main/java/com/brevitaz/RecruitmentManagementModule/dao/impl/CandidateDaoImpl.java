@@ -109,33 +109,6 @@ public class CandidateDaoImpl implements CandidateDao {
        return candidates;
    }
 
-    public List<Candidate> getByKeyword(String name) {
-
-        List<Candidate> candidates = new ArrayList<>();
-        SearchRequest request = new SearchRequest(
-                environment.getProperty("request.candidateIndex"));
-
-
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.termQuery("name",name));
- /*sourceBuilder.from(0);
- sourceBuilder.size(10);*/
-        request.source(sourceBuilder);
-        try {
-            SearchResponse searchResponse = client.search(request);
-            SearchHit[] hits = searchResponse.getHits().getHits();
-            for (SearchHit hit : hits) {
-                Candidate candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
-                LOGGER.info("CANDIDATE : "+candidate);
-                candidates.add(candidate);
-            }
-        }
-        catch (Exception e ){
-            e.printStackTrace();
-        }
-        return candidates;
-    }
-
 
     @Override
     public boolean update( String id,Candidate candidate){
@@ -210,6 +183,39 @@ public class CandidateDaoImpl implements CandidateDao {
         return candidates;
 
     }
+
+
+    /*
+
+    public List<Candidate> getByKeyword(String name) {
+
+        List<Candidate> candidates = new ArrayList<>();
+        SearchRequest request = new SearchRequest(
+                environment.getProperty("request.candidateIndex"));
+
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.termQuery("name",name));
+ */
+/*sourceBuilder.from(0);
+ sourceBuilder.size(10);*//*
+
+        request.source(sourceBuilder);
+        try {
+            SearchResponse searchResponse = client.search(request);
+            SearchHit[] hits = searchResponse.getHits().getHits();
+            for (SearchHit hit : hits) {
+                Candidate candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
+                LOGGER.info("CANDIDATE : "+candidate);
+                candidates.add(candidate);
+            }
+        }
+        catch (Exception e ){
+            e.printStackTrace();
+        }
+        return candidates;
+    }
+*/
 
 
     @PostConstruct

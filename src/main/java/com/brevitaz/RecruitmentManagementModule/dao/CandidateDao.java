@@ -16,7 +16,6 @@ public interface CandidateDao {
     public boolean delete(String id);
     public Candidate getById(String id);
     public List<Candidate> getAll();
-    public List<Candidate> getByKeyword(String name);
     public List<Candidate> getByName(String name);
     public boolean update(String id , Candidate candidate);
 
