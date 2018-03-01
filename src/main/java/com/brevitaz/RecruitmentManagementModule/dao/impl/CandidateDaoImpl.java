@@ -43,13 +43,13 @@ import java.util.List;
 public class CandidateDaoImpl implements CandidateDao {
 
     @Autowired
-    ClientConfig client;
+    private ClientConfig client;
 
     @Autowired
-     Environment environment;
+     private Environment environment;
 
      @Autowired
-     ObjectMapperProvider mapper;
+     private ObjectMapperProvider mapper;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
 
