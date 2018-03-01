@@ -1,5 +1,7 @@
 package com.brevitaz.RecruitmentManagementModule.dao.impl;
 
+import com.brevitaz.RecruitmentManagementModule.config.ClientConfig;
+import com.brevitaz.RecruitmentManagementModule.config.ObjectMapperProvider;
 import com.brevitaz.RecruitmentManagementModule.dao.CandidateDao;
 import com.brevitaz.RecruitmentManagementModule.model.Candidate;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,13 +43,13 @@ import java.util.List;
 public class CandidateDaoImpl implements CandidateDao {
 
     @Autowired
-     RestHighLevelClient client;
+    ClientConfig client;
 
     @Autowired
      Environment environment;
 
-    @Autowired
-     ObjectMapper mapper;
+     @Autowired
+     ObjectMapperProvider mapper;
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
 
@@ -62,13 +64,13 @@ public class CandidateDaoImpl implements CandidateDao {
                 environment.getProperty("elasticsearch.index.candidate"),TYPE,candidate.getId());
 
         LOGGER.info("Hello LOGGER");
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // execution
         try {
 
-            String json = mapper.writeValueAsString(candidate);
+            String json = mapper.getInstance().writeValueAsString(candidate);
             request.source(json, XContentType.JSON);
-            IndexResponse response = client.index(request);
+            IndexResponse response = client.getClient().index(request);
             LOGGER.info("status for candidate - insert"+response.status());
             return (response.status()+"").equals("CREATED");
 
@@ -95,10 +97,10 @@ public class CandidateDaoImpl implements CandidateDao {
            sourceBuilder.query(matchQueryBuilder);
            //sourceBuilder.query(QueryBuilders.boolQuery().must(matchQuery("name",name)));
            request.source(sourceBuilder);
-           SearchResponse response = client.search(request);
+           SearchResponse response = client.getClient().search(request);
            SearchHits hits = response.getHits();
            for (SearchHit hit : hits) {
-               Candidate candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
+               Candidate candidate = mapper.getInstance().readValue(hit.getSourceAsString(), Candidate.class);
                LOGGER.info("Candidate : "+candidate);
                candidates.add(candidate);
            }
@@ -116,11 +118,11 @@ public class CandidateDaoImpl implements CandidateDao {
                 environment.getProperty("elasticsearch.index.candidate"),TYPE,id
         );
 
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            String json = mapper.writeValueAsString(candidate);
+            String json = mapper.getInstance().writeValueAsString(candidate);
             request.doc(json,XContentType.JSON);
-            UpdateResponse response = client.update(request);
+            UpdateResponse response = client.getClient().update(request);
             return (""+response.status()).equals("OK");
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,7 +136,7 @@ public class CandidateDaoImpl implements CandidateDao {
                 environment.getProperty("elasticsearch.index.candidate"),TYPE, id);
 
         try {
-            DeleteResponse response = client.delete(deleteRequest);
+            DeleteResponse response = client.getClient().delete(deleteRequest);
             return (response.status() + "").equals("OK");
 
         } catch (IOException e) {
@@ -150,8 +152,8 @@ public class CandidateDaoImpl implements CandidateDao {
                 environment.getProperty("elasticsearch.index.candidate"),TYPE,id);
 
         try {
-            GetResponse getResponse=client.get(request);
-            Candidate candidate = mapper.readValue(getResponse.getSourceAsString(), Candidate.class);
+            GetResponse getResponse=client.getClient().get(request);
+            Candidate candidate = mapper.getInstance().readValue(getResponse.getSourceAsString(), Candidate.class);
             return candidate;
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,13 +170,13 @@ public class CandidateDaoImpl implements CandidateDao {
         searchRequest.types(TYPE);
 
         try {
-            SearchResponse searchResponse = client.search(searchRequest);
+            SearchResponse searchResponse = client.getClient().search(searchRequest);
             SearchHit[] hits = searchResponse.getHits().getHits();
 
             Candidate candidate;
 
             for (SearchHit hit : hits) {
-                candidate = mapper.readValue(hit.getSourceAsString(), Candidate.class);
+                candidate = mapper.getInstance().readValue(hit.getSourceAsString(), Candidate.class);
                 candidates.add(candidate);
             }
         } catch (IOException ioe) {
@@ -224,3 +226,5 @@ public class CandidateDaoImpl implements CandidateDao {
     }
 
 }
+
+

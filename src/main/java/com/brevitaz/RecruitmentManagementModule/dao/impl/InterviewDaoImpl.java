@@ -1,5 +1,7 @@
 package com.brevitaz.RecruitmentManagementModule.dao.impl;
 
+import com.brevitaz.RecruitmentManagementModule.config.ClientConfig;
+import com.brevitaz.RecruitmentManagementModule.config.ObjectMapperProvider;
 import com.brevitaz.RecruitmentManagementModule.dao.InterviewDao;
 import com.brevitaz.RecruitmentManagementModule.model.Interview;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -35,13 +37,13 @@ import java.util.List;
 public class InterviewDaoImpl implements InterviewDao {
 
     @Autowired
-    private RestHighLevelClient client;
+    private ClientConfig client;
 
     @Autowired
     private Environment environment;
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapperProvider mapper;
 
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
@@ -54,12 +56,12 @@ public class InterviewDaoImpl implements InterviewDao {
 
         IndexRequest request = new IndexRequest(
                 environment.getProperty("elasticsearch.index.interviews"),TYPE,interview.getId());
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
 
-            String json = mapper.writeValueAsString(interview);
+            String json = mapper.getInstance().writeValueAsString(interview);
             request.source(json, XContentType.JSON);
-            IndexResponse response = client.index(request);
+            IndexResponse response = client.getClient().index(request);
             return (response.status()+"").equals("CREATED");
 
         } catch (IOException e) {
@@ -75,7 +77,7 @@ public class InterviewDaoImpl implements InterviewDao {
                 environment.getProperty("elasticsearch.index.interviews"),TYPE, id);
 
         try {
-            DeleteResponse response = client.delete(deleteRequest);
+            DeleteResponse response = client.getClient().delete(deleteRequest);
             return (response.status() + "").equals("OK");
 
         } catch (IOException e) {
@@ -91,8 +93,8 @@ public class InterviewDaoImpl implements InterviewDao {
                 environment.getProperty("elasticsearch.index.interviews"),TYPE,id);
 
         try {
-            GetResponse getResponse=client.get(request);
-            Interview interview = mapper.readValue(getResponse.getSourceAsString(), Interview.class);
+            GetResponse getResponse=client.getClient().get(request);
+            Interview interview = mapper.getInstance().readValue(getResponse.getSourceAsString(), Interview.class);
             return interview;
         } catch (IOException e) {
             e.printStackTrace();
@@ -110,12 +112,12 @@ public class InterviewDaoImpl implements InterviewDao {
         searchRequest.types(TYPE);
 
         try {
-            SearchResponse searchResponse = client.search(searchRequest);
+            SearchResponse searchResponse = client.getClient().search(searchRequest);
             SearchHit[] hits = searchResponse.getHits().getHits();
 
             Interview interview;
             for (SearchHit hit : hits) {
-                interview = mapper.readValue(hit.getSourceAsString(), Interview.class);
+                interview = mapper.getInstance().readValue(hit.getSourceAsString(), Interview.class);
                 interviews.add(interview);
             }
         } catch (IOException ioe) {
@@ -131,11 +133,11 @@ public class InterviewDaoImpl implements InterviewDao {
         UpdateRequest request = new UpdateRequest(
                 environment.getProperty("elasticsearch.index.interviews"),TYPE,id);
 
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            String json = mapper.writeValueAsString(interview);
+            String json = mapper.getInstance().writeValueAsString(interview);
             request.doc(json,XContentType.JSON);
-            UpdateResponse response = client.update(request);
+            UpdateResponse response = client.getClient().update(request);
             return (""+response.status()).equals("OK");
         } catch (IOException e) {
             e.printStackTrace();

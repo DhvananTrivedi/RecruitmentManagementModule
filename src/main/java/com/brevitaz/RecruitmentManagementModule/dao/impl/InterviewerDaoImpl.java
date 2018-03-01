@@ -1,5 +1,7 @@
 package com.brevitaz.RecruitmentManagementModule.dao.impl;
 
+import com.brevitaz.RecruitmentManagementModule.config.ClientConfig;
+import com.brevitaz.RecruitmentManagementModule.config.ObjectMapperProvider;
 import com.brevitaz.RecruitmentManagementModule.dao.InterviewerDao;
 import com.brevitaz.RecruitmentManagementModule.model.Interviewer;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,13 +38,13 @@ import java.util.List;
 public class InterviewerDaoImpl implements InterviewerDao {
 
     @Autowired
-    private RestHighLevelClient client;
+    private ClientConfig client;
 
     @Autowired
     private Environment environment;
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapperProvider mapper;
 
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CandidateDaoImpl.class);
@@ -54,13 +56,13 @@ public class InterviewerDaoImpl implements InterviewerDao {
         // init
         IndexRequest request = new IndexRequest(
                 environment.getProperty("elasticsearch.index.interviewer"),TYPE, interviewer.getId());
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //exec
         try {
 
-            String json = mapper.writeValueAsString(interviewer);
+            String json = mapper.getInstance().writeValueAsString(interviewer);
             request.source(json, XContentType.JSON);
-            IndexResponse response = client.index(request);
+            IndexResponse response = client.getClient().index(request);
             return (response.status()+"").equals("CREATED");
 
         } catch (Exception e) {
@@ -76,7 +78,7 @@ public class InterviewerDaoImpl implements InterviewerDao {
                 environment.getProperty("elasticsearch.index.interviewer"), TYPE, id);
 
         try {
-            DeleteResponse response = client.delete(deleteRequest);
+            DeleteResponse response = client.getClient().delete(deleteRequest);
             return (response.status() + "").equals("OK");
 
        } catch (Exception e) {
@@ -92,8 +94,8 @@ public class InterviewerDaoImpl implements InterviewerDao {
                 environment.getProperty("elasticsearch.index.interviewer"),TYPE,id);
 
         try {
-            GetResponse getResponse=client.get(request);
-            Interviewer interviewer = mapper.readValue(getResponse.getSourceAsString(), Interviewer.class);
+            GetResponse getResponse=client.getClient().get(request);
+            Interviewer interviewer = mapper.getInstance().readValue(getResponse.getSourceAsString(), Interviewer.class);
             return interviewer;
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,12 +111,12 @@ public class InterviewerDaoImpl implements InterviewerDao {
         searchRequest.types(TYPE);
 
         try {
-            SearchResponse searchResponse = client.search(searchRequest);
+            SearchResponse searchResponse = client.getClient().search(searchRequest);
             SearchHit[] hits = searchResponse.getHits().getHits();
 
             Interviewer interviewer;
             for (SearchHit hit : hits) {
-                interviewer = mapper.readValue(hit.getSourceAsString(), Interviewer.class);
+                interviewer = mapper.getInstance().readValue(hit.getSourceAsString(), Interviewer.class);
                 interviewers.add(interviewer);
             }
         } catch (Exception e) {
@@ -148,10 +150,10 @@ public class InterviewerDaoImpl implements InterviewerDao {
             sourceBuilder.query(matchQueryBuilder);
             //sourceBuilder.query(QueryBuilders.boolQuery().must(matchQuery("name",name)));
             request.source(sourceBuilder);
-            SearchResponse response = client.search(request);
+            SearchResponse response = client.getClient().search(request);
             SearchHits hits = response.getHits();
             for (SearchHit hit : hits) {
-                Interviewer interviewer = mapper.readValue(hit.getSourceAsString(), Interviewer.class);
+                Interviewer interviewer = mapper.getInstance().readValue(hit.getSourceAsString(), Interviewer.class);
                 LOGGER.info("Interviewer  : "+interviewer);
                 interviewers.add(interviewer);
             }
@@ -169,11 +171,11 @@ public class InterviewerDaoImpl implements InterviewerDao {
         UpdateRequest request = new UpdateRequest(
                 environment.getProperty("elasticsearch.index.interviewer"),TYPE,id);
 
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.getInstance().setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            String json = mapper.writeValueAsString(interviewer);
+            String json = mapper.getInstance().writeValueAsString(interviewer);
             request.doc(json,XContentType.JSON);
-            UpdateResponse response = client.update(request);
+            UpdateResponse response = client.getClient().update(request);
             return (""+response.status()).equals("OK");
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,10 +199,10 @@ public class InterviewerDaoImpl implements InterviewerDao {
                     .maxExpansions(10);
             sourceBuilder.query(matchQueryBuilder);
             request.source(sourceBuilder);
-            SearchResponse response = client.search(request);
+            SearchResponse response = client.getClient().search(request);
             SearchHits hits = response.getHits();
             for (SearchHit hit : hits) {
-                Interviewer interviewer = mapper.readValue(hit.getSourceAsString(), Interviewer.class);
+                Interviewer interviewer = mapper.getInstance().readValue(hit.getSourceAsString(), Interviewer.class);
                 LOGGER.info("Interviwer  : "+interviewer);
                 interviewers.add(interviewer);
             }
